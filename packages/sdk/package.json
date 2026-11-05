@@ -32,6 +32,7 @@
     "rwa"
   ],
   "devDependencies": {
+    "@types/node": "^22",
     "tsup": "^9.0.0",
     "typescript": "^5.9.3",
     "viem": "^2.57.16",
