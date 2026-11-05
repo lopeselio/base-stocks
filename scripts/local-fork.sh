@@ -2,7 +2,7 @@
 # Local Base mainnet fork with working B20 stocks + a deployed Mag7 basket.
 #
 # B20 tokens are native precompiles (code == 0xef) and cannot execute in anvil, so this script
-# replaces the Mag7 tokens with B20Mock seeded from live mainnet state, funds a dev account,
+# replaces every stock that has a Chainlink feed with B20Mock seeded from live mainnet state, funds a dev account,
 # and deploys BasketFactory + bMAG7 using anvil's unlocked default account (no private keys).
 #
 #   ./scripts/local-fork.sh                 # anvil on :8545, funds anvil account #0
@@ -26,6 +26,11 @@ TOKENS=(
   0xB200000000000000000000Ab99cFa739E253872B # MSFTc
   0xb20000000000000000000078ee7ce2fE4908108C # NVDAc
   0xb2000000000000000000001e800a7f5189430cD0 # TSLAc
+  # Not in the basket, but etched too: an unexecutable 0xef precompile burns all gas and would sink
+  # any multicall batch (e.g. a portfolio read) that touches it.
+  0xb2000000000000000000004884b426556b92883d # MSTRc
+  0xb200000000000000000000397293Cb8cda9a10c5 # SNDKc
+  0xb2000000000000000000007b9fcbd005511aCBd5 # SPCXc
 )
 
 if ! curl -sf -X POST -H 'content-type: application/json' \
