@@ -113,6 +113,17 @@ export async function readPortfolio(
     ] as const),
   });
 
+  // A failure of every call means the batch itself failed (RPC error, or a call that burned all gas,
+  // e.g. an unexecutable B20 precompile in a local fork). Never report that as an empty portfolio.
+  if (tokens.length > 0 && res.every((r) => r.status === "failure")) {
+    const first = res[0];
+    throw new Error(
+      `readPortfolio: every call failed; refusing to return an empty portfolio (${
+        first?.status === "failure" ? (first.error as Error).message.split("\n")[0] : "unknown error"
+      })`,
+    );
+  }
+
   const positions: Position[] = [];
   tokens.forEach((token, i) => {
     const [sym, bal, mult] = [res[i * 3], res[i * 3 + 1], res[i * 3 + 2]];
