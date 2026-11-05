@@ -1,0 +1,40 @@
+{
+  "name": "@base-stocks/sdk",
+  "version": "0.0.1",
+  "description": "TypeScript SDK for Coinbase tokenized stocks (B20) on Base: listing, multiplier-correct balances, safe pricing",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "viem": "^2.0.0"
+  },
+  "keywords": [
+    "base",
+    "tokenized-stocks",
+    "b20",
+    "coinbase",
+    "viem",
+    "rwa"
+  ],
+  "devDependencies": {
+    "tsup": "^9.0.0",
+    "typescript": "^7.0.2",
+    "viem": "^2.57.16",
+    "vitest": "^5.1.0"
+  }
+}
