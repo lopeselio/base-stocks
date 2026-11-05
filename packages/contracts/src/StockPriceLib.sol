@@ -29,7 +29,11 @@ library StockPriceLib {
     }
 
     /// @notice Same as `freshPrice` but returns ok=false instead of reverting (for view UIs / health checks).
-    function tryFreshPrice(address feed, uint256 maxAge) internal view returns (bool ok, uint256 price, uint256 updatedAt) {
+    function tryFreshPrice(address feed, uint256 maxAge)
+        internal
+        view
+        returns (bool ok, uint256 price, uint256 updatedAt)
+    {
         try AggregatorV3Interface(feed).latestRoundData() returns (
             uint80 roundId, int256 answer, uint256, uint256 _updatedAt, uint80 answeredInRound
         ) {

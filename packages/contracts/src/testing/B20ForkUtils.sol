@@ -47,9 +47,8 @@ library B20ForkUtils {
 
     /// @dev eth_call against the forked RPC at the fork block, bypassing the local EVM.
     function _liveCall(address to, bytes memory data) private returns (bytes memory) {
-        string memory params = string.concat(
-            '[{"to":"', vm.toString(to), '","data":"', vm.toString(data), '"},"', _blockTag(), '"]'
-        );
+        string memory params =
+            string.concat('[{"to":"', vm.toString(to), '","data":"', vm.toString(data), '"},"', _blockTag(), '"]');
         return vm.rpc("eth_call", params);
     }
 
@@ -61,7 +60,9 @@ library B20ForkUtils {
         if (v == 0) return "0x0";
         bytes memory hexChars = "0123456789abcdef";
         uint256 len;
-        for (uint256 t = v; t != 0; t >>= 4) len++;
+        for (uint256 t = v; t != 0; t >>= 4) {
+            len++;
+        }
         bytes memory out = new bytes(len + 2);
         out[0] = "0";
         out[1] = "x";
