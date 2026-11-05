@@ -19,7 +19,31 @@ There are 298 tokenized US equities on Base today. Every team building on them r
 |---|---|
 | [`packages/sdk`](packages/sdk) | `@base-stocks/sdk`: TypeScript + viem. API client, onchain reads, multicall portfolio, math |
 | [`packages/contracts`](packages/contracts) | Foundry. `StockBasket`, `BasketFactory`, `StockPriceLib`, `IB20Asset`, `B20Mock`, `B20ForkUtils` |
+| [`packages/mcp`](packages/mcp) | `@base-stocks/mcp`: read-only MCP server so AI agents can query stocks, prices, portfolios and baskets |
+| [`apps/api`](apps/api) | Fastify API (`/v1/board`, `/v1/stocks`, `/v1/baskets`, …) with caching |
+| [`apps/web`](apps/web) | Next.js app: live board, all stocks, basket pages with in-kind mint/redeem (disabled for US visitors) |
 | [`examples/quickstart`](examples/quickstart) | Live stock board + portfolio CLI |
+| [`scripts/local-fork.sh`](scripts/local-fork.sh) | Base mainnet fork with working B20 stocks and a deployed Mag7 basket |
+
+## Run the app locally
+
+```bash
+./scripts/local-fork.sh                      # anvil fork + etched stocks + bMAG7, prints the factory
+BASE_RPC_URL=http://127.0.0.1:8545 BASKET_FACTORY=<factory> pnpm --filter @base-stocks/api dev   # :4000
+API_URL=http://localhost:4000 NEXT_PUBLIC_BASE_RPC_URL=http://127.0.0.1:8545 pnpm --filter @base-stocks/web dev
+```
+
+Without the fork (`BASE_RPC_URL` unset), the API and app read Base mainnet and show the Mag7 basket as a
+live preview until a factory is deployed.
+
+## Agents (MCP)
+
+```bash
+claude mcp add base-stocks -- npx -y @base-stocks/mcp
+```
+
+Then ask: *"What's the NAV of bMAG7 and are all its feeds fresh?"* or *"Value the stock portfolio of
+0x…"*. Details in [packages/mcp](packages/mcp).
 
 ## Quickstart
 
