@@ -24,6 +24,24 @@ jobs:
         env:
           LIVE: "1"
 
+  apps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @base-stocks/sdk build
+      - run: pnpm --filter @base-stocks/api typecheck
+      - run: pnpm --filter @base-stocks/api test
+      - run: pnpm --filter @base-stocks/web typecheck
+      - run: pnpm --filter @base-stocks/web build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+
   contracts:
     runs-on: ubuntu-latest
     defaults:
