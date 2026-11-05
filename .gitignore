@@ -14,3 +14,7 @@ packages/contracts/broadcast/
 # private planning notes
 ROADMAP.md
 PLAYBOOK.md
+
+# vercel
+.vercel
+.env*
