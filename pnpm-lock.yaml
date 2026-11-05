@@ -109,9 +109,6 @@ importers:
 
   packages/mcp:
     dependencies:
-      '@base-stocks/sdk':
-        specifier: workspace:^
-        version: link:../sdk
       '@modelcontextprotocol/sdk':
         specifier: ^1.32.2
         version: 1.32.2(zod@4.6.7)
@@ -122,6 +119,9 @@ importers:
         specifier: ^4.6.7
         version: 4.6.7
     devDependencies:
+      '@base-stocks/sdk':
+        specifier: workspace:^
+        version: link:../sdk
       '@types/node':
         specifier: ^22
         version: 22.20.5
