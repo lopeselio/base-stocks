@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { buildApp } from "../src/app.js";
+import { buildApp } from "../src/routes.js";
 import { cached } from "../src/cache.js";
 import { mag7FromBoard, MAG7, type BoardRow, type DataSource } from "../src/data.js";
 

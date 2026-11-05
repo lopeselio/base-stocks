@@ -3,18 +3,27 @@ import cors from "@fastify/cors";
 import { isAddress, type Address } from "viem";
 import type { DataSource } from "./data.js";
 
-export interface AppOptions {
+export interface RouteOptions {
   data: DataSource;
   corsOrigin?: string | string[] | boolean;
+}
+
+export interface AppOptions extends RouteOptions {
   logger?: boolean;
+}
+
+/** Build a standalone app (used by tests). The Vercel/Node entrypoint is src/index.ts. */
+export async function buildApp({ logger = false, ...opts }: AppOptions): Promise<FastifyInstance> {
+  const app = Fastify({ logger });
+  await registerRoutes(app, opts);
+  return app;
 }
 
 /**
  * Read-only HTTP API over Coinbase tokenized stocks and StockBaskets on Base.
  * Routes are versioned under /v1 and cache-friendly (s-maxage + stale-while-revalidate).
  */
-export async function buildApp({ data, corsOrigin = true, logger = false }: AppOptions): Promise<FastifyInstance> {
-  const app = Fastify({ logger });
+export async function registerRoutes(app: FastifyInstance, { data, corsOrigin = true }: RouteOptions) {
   await app.register(cors, { origin: corsOrigin, methods: ["GET"] });
 
   const cache = (seconds: number) => `public, s-maxage=${seconds}, stale-while-revalidate=${seconds * 4}`;
@@ -52,6 +61,4 @@ export async function buildApp({ data, corsOrigin = true, logger = false }: AppO
       return reply.code(404).send({ error: "not a StockBasket" });
     }
   });
-
-  return app;
 }
