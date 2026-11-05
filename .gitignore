@@ -10,3 +10,6 @@ coverage/
 packages/contracts/out/
 packages/contracts/cache/
 packages/contracts/broadcast/
+
+# private planning notes
+ROADMAP.md

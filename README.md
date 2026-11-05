@@ -84,7 +84,7 @@ BASE_RPC_URL=https://mainnet.base.org forge test --mc ForkTest
 
 ## Status
 
-Pre-alpha, built in public. See [ROADMAP.md](ROADMAP.md). Open questions and verified facts are in
+Pre-alpha, built in public. Open questions and verified facts are in
 [docs/research.md](docs/research.md). Corrections are very welcome.
 
 > Not affiliated with Coinbase or Base. Not financial advice. Tokenized stocks are restricted in some
