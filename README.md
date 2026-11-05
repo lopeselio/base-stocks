@@ -18,7 +18,7 @@ There are 298 tokenized US equities on Base today. Every team building on them r
 | | |
 |---|---|
 | [`packages/sdk`](packages/sdk) | `@base-stocks/sdk`: TypeScript + viem. API client, onchain reads, multicall portfolio, math |
-| [`packages/contracts`](packages/contracts) | Foundry. `StockPriceLib`, `IB20Asset`, `B20Mock`, `B20ForkUtils` |
+| [`packages/contracts`](packages/contracts) | Foundry. `StockBasket`, `BasketFactory`, `StockPriceLib`, `IB20Asset`, `B20Mock`, `B20ForkUtils` |
 | [`examples/quickstart`](examples/quickstart) | Live stock board + portfolio CLI |
 
 ## Quickstart
@@ -60,6 +60,34 @@ import {StockPriceLib} from "base-stocks/StockPriceLib.sol";
 uint256 usd18 = StockPriceLib.valueOf(NVDAc, NVDA_FEED, amount, 1 days);
 if (StockPriceLib.multiplierChangeImminent(NVDAc, 1 hours)) revert CorporateActionWindow();
 ```
+
+### Stock baskets (on-chain indexes)
+
+`StockBasket` is a fixed-composition ERC-20 backed 1:1 by B20 stocks, minted and redeemed **in-kind**
+(like ETF creation units). Anyone can launch one through `BasketFactory`.
+
+- **No oracle on mint/redeem.** It works 24/7, including weekends when equity feeds are frozen, and
+  can't be oracle-manipulated.
+- **Dividends compound automatically.** The vault holds raw B20 tokens, so reinvested dividends (multiplier
+  increases) raise the shares behind every basket unit. No keeper, no rebalancing.
+- **Always solvent.** Mint rounds up and redeem rounds down. This is checked by stateful invariant tests
+  (128k random calls).
+- **`nav()` is for display only** and returns `allFresh` so integrators never price against stale feeds.
+
+```solidity
+address bMAG7 = factory.createBasket("Base Mag7", "bMAG7", tokens, unitAmounts, feeds, 4 days);
+uint256[] memory need = StockBasket(bMAG7).previewMint(1e18); // approve each, then:
+StockBasket(bMAG7).mint(1e18, msg.sender);
+(uint256 navPerUnit, bool fresh) = StockBasket(bMAG7).nav();
+```
+
+```ts
+import { readBasket } from "@base-stocks/sdk";
+const b = await readBasket(client, bMAG7); // components, sharesPerUnit, navPerUnit, navFresh
+```
+
+Live check on a Base mainnet fork: a 7-stock bMAG7 (0.1 of each) priced at **$268.19 per unit**
+against the real Chainlink feeds (`test/BasketFork.t.sol`). Deploy with `script/DeployMag7.s.sol`.
 
 ### Fork testing B20
 
