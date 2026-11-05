@@ -40,7 +40,7 @@ describe("valueUsd", () => {
   it("perShare applies the multiplier", () => {
     const v = valueUsd(2_00000000n, feed, GOOGL_MULT, "perShare");
     expect(v).toBeGreaterThan(581_58924548n);
-    expect(formatUsd(v)).toBe("581.8");
+    expect(formatUsd(v)).toBe("581.80");
   });
 });
 
@@ -50,5 +50,7 @@ describe("formatFixed", () => {
     expect(formatFixed(100000000n, 8)).toBe("1");
     expect(formatFixed(-5n, 8)).toBe("-0.00000005");
     expect(formatUsd(377_76458834n)).toBe("377.76");
+    expect(formatUsd(556_40000000n)).toBe("556.40");
+    expect(formatUsd(100_00000000n)).toBe("100.00");
   });
 });

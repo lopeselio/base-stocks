@@ -35,14 +35,14 @@ export function valueUsd(
 }
 
 /** Format a fixed-point bigint as a decimal string without precision loss. */
-export function formatFixed(value: bigint, decimals: number, maxFraction = decimals): string {
+export function formatFixed(value: bigint, decimals: number, maxFraction = decimals, minFraction = 0): string {
   const neg = value < 0n;
   const abs = neg ? -value : value;
   const base = 10n ** BigInt(decimals);
   const whole = abs / base;
-  let frac = (abs % base).toString().padStart(decimals, "0").slice(0, maxFraction).replace(/0+$/, "");
+  let frac = (abs % base).toString().padStart(decimals, "0").slice(0, maxFraction).replace(/0+$/, "").padEnd(minFraction, "0");
   return `${neg ? "-" : ""}${whole}${frac ? "." + frac : ""}`;
 }
 
-export const formatUsd = (v: bigint, maxFraction = 2) => formatFixed(v, FEED_DECIMALS, maxFraction);
+export const formatUsd = (v: bigint, maxFraction = 2) => formatFixed(v, FEED_DECIMALS, maxFraction, Math.min(2, maxFraction));
 export const formatMultiplier = (m: bigint) => formatFixed(m, 18);
