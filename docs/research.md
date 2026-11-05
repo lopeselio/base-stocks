@@ -74,3 +74,17 @@ Verified against Base mainnet and `api.coinbase.com` on **2026-11-05**. Anything
   `GET /prospectus/{ticker}` (302 to PDF), `GET /corporate-actions/{uuid}` (UUID taken from the
   onchain `Announcement` URI).
 - No testnet deployment is documented.
+
+## ⚠️ B20 tokens cannot be executed in Foundry/Anvil forks
+
+`eth_getCode` on any B20 address returns a single byte: `0xef`. The token logic runs natively in
+the Base node, so when a local fork (forge `createSelectFork`, anvil `--fork-url`) executes a call to it,
+it hits `OpcodeNotFound`:
+
+```
+├─ 0xb2000000000000000000002D0BA3164cc74f58B7::decimals() [staticcall]
+│   └─ ← [OpcodeNotFound] EvmError: OpcodeNotFound
+```
+
+Workaround (shipped in this repo): `B20ForkUtils.etchLive(token)` reads live state from the RPC via
+`vm.rpc("eth_call", …)` and then `vm.etch`es a behaviourally-equivalent `B20Mock` at the same address.
