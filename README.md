@@ -3,7 +3,9 @@
 **Open-source developer toolkit for Coinbase tokenized stocks (B20) on Base.**
 Built in public for [Base Stocks Maxxing](https://www.base.org/stocksmaxxing) (Nov 5 – Dec 5, 2026).
 
-**Live:** app https://base-stocks-web.vercel.app · API https://base-stocks-api.vercel.app/v1/board
+**Live:** app https://base-stocks-web.vercel.app · API https://base-stocks-api.vercel.app/v1/board ·
+bMAG7 on Base [`0xaBf06F7e…D0BF`](https://basescan.org/address/0xaBf06F7e25E1cAbDB9D25FB80aAcD6D3d25eD0BF)
+([all deployments](docs/deployments.md))
 
 There are 298 tokenized US equities on Base today. Every team building on them runs into the same problems:
 
