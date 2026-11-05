@@ -1,0 +1,15 @@
+{
+  "name": "@base-stocks/example-quickstart",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx index.ts"
+  },
+  "dependencies": {
+    "@base-stocks/sdk": "workspace:*",
+    "viem": "^2.57.16"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.0"
+  }
+}
