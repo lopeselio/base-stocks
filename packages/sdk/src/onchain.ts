@@ -4,6 +4,12 @@ import { aggregatorV3Abi } from "./abi/chainlink.js";
 import { KNOWN_STOCKS } from "./constants.js";
 import { type PriceBasis, toShares, valueUsd } from "./math.js";
 
+/**
+ * The SDK only needs these two methods, so any viem client works, including chain-specific clients
+ * such as `createPublicClient({ chain: base })`, whose OP-stack tx types don't widen to `PublicClient`.
+ */
+export type StocksClient = Pick<PublicClient, "multicall" | "readContract">;
+
 export interface StockState {
   token: Address;
   symbol: string;
@@ -29,7 +35,7 @@ export interface FeedPrice {
 /** Default staleness bound: the feed heartbeat is 24h during market hours. */
 export const DEFAULT_MAX_PRICE_AGE = 26 * 60 * 60;
 
-export async function readStock(client: PublicClient, token: Address): Promise<StockState> {
+export async function readStock(client: StocksClient, token: Address): Promise<StockState> {
   const c = { address: token, abi: b20Abi } as const;
   const [symbol, decimals, totalSupply, multiplier, newMult, effectiveAt] = await client.multicall({
     allowFailure: false,
@@ -50,7 +56,7 @@ export async function readStock(client: PublicClient, token: Address): Promise<S
 }
 
 export async function readFeedPrice(
-  client: PublicClient,
+  client: StocksClient,
   feed: Address,
   opts: { maxAgeSeconds?: number; now?: number } = {},
 ): Promise<FeedPrice> {
@@ -93,7 +99,7 @@ export interface Position {
  * Defaults to every stock in KNOWN_STOCKS.
  */
 export async function readPortfolio(
-  client: PublicClient,
+  client: StocksClient,
   account: Address,
   opts: { tokens?: Address[]; basis?: PriceBasis; includeZero?: boolean; maxAgeSeconds?: number } = {},
 ): Promise<Position[]> {
